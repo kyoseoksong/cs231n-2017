@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 from __future__ import print_function
 
 from six.moves import cPickle as pickle
@@ -10,6 +11,7 @@ import platform
 # [직렬화] Pickling (= Serialization = Flattening) : byte stream으로 변환
 def load_pickle(f): 
     
+    # 파이썬 버전 확인하기
     version = platform.python_version_tuple() # 3,5,2
     # platform.python_version_tuple() 은 파이썬의 버전을 tuple로 반환 (major, minor, patchlevel)
     # print(version[0], version[1], version[2]) # 3 5 2
@@ -26,6 +28,7 @@ def load_pickle(f):
         # s = pickle.load(f, encoding='latin1')
         # b = s.encode('latin1') # 인코딩
         # print(zlib.decompress(b)) #디코딩
+        # "utf8"로 설정해도 무방하다라고 합니다. 
         
     raise ValueError("invalid python version: {}".format(version))
 
@@ -35,7 +38,8 @@ def load_CIFAR_batch(filename):
     datadict = load_pickle(f)
     X = datadict['data'] # len(X)는 10000, len(X[0])은 3072
     Y = datadict['labels'] # len(Y)는 10000, Y[0], Y[1], ... 는 각각 0~9 사이의 정수 (integer)
-    X = X.reshape(10000, 3, 32, 32).transpose(0,2,3,1).astype("float") # (1000, 32, 32, 3)의 형태로 변환해 준다. # 일반적으로 연산할 때에는 float로 변환해 주고, 보여줄 때에는 uint8으로 변환해 준다. 
+    X = X.reshape(10000, 3, 32, 32).transpose(0,2,3,1).astype("float") # (1000, 32, 32, 3)의 형태로 변환해 준다. 
+    # 일반적으로 연산할 때에는 float로 변환해 주고, 보여줄 때에는 uint8으로 변환해 준다. 
     Y = np.array(Y)
     return X, Y
 

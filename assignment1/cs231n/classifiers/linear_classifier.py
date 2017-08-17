@@ -13,8 +13,12 @@ class LinearClassifier(object):
 
   def train(self, X, y, learning_rate=1e-3, reg=1e-5, num_iters=100,
             batch_size=200, verbose=False):
+    
     """
     Train this linear classifier using stochastic gradient descent.
+    
+    X 의 차원 : (49000, 3073)
+    y 의 차원 : (40000,)
 
     Inputs:
     - X: A numpy array of shape (N, D) containing training data; there are N
@@ -30,11 +34,15 @@ class LinearClassifier(object):
     Outputs:
     A list containing the value of the loss function at each training iteration.
     """
-    num_train, dim = X.shape
-    num_classes = np.max(y) + 1 # assume y takes values 0...K-1 where K is number of classes
+    # print (X.shape) # (49000, 3073)
+    num_train, dim = X.shape # num_train에는 49,000이, dim은 3073이 할당된다. 
+    # print (num_train) # 49000
+    # print (dim) # 49000
+    
+    num_classes = np.max(y) + 1 # assume y takes values 0...K-1 where K is number of classes # y는 0~9의 클래스니까 max(y) == 9 이니까 num_classes == 10
     if self.W is None:
       # lazily initialize W
-      self.W = 0.001 * np.random.randn(dim, num_classes)
+      self.W = 0.001 * np.random.randn(dim, num_classes) # (3073, 10)
 
     # Run stochastic gradient descent to optimize W
     loss_history = []
@@ -54,7 +62,7 @@ class LinearClassifier(object):
       # replacement is faster than sampling without replacement.              #
       #########################################################################
       
-      batch_indices = np.random.choice(num_train, batch_size, replace=True)
+      batch_indices = np.random.choice(num_train, batch_size, replace=True) # 200개
       X_batch = X[batch_indices]
       y_batch = y[batch_indices]
     
@@ -63,7 +71,7 @@ class LinearClassifier(object):
       #########################################################################
 
       # evaluate loss and gradient
-      loss, grad = self.loss(X_batch, y_batch, reg)
+      loss, grad = self.loss(X_batch, y_batch, reg) # 138행의 loss() 호출
       loss_history.append(loss)
 
       # perform parameter update
@@ -95,7 +103,9 @@ class LinearClassifier(object):
       array of length N, and each element is an integer giving the predicted
       class.
     """
-    y_pred = np.zeros(X.shape[0])
+    # print (X.shape) # (49000, 3073)
+    y_pred = np.zeros(X.shape[0]) # (49000,)
+    
     ###########################################################################
     # TODO:                                                                   #
     # Implement this method. Store the predicted labels in y_pred.            #
@@ -104,6 +114,7 @@ class LinearClassifier(object):
     ###########################################################################
     #                           END OF YOUR CODE                              #
     ###########################################################################
+    # print (y_pred.shape) # (49000,)
     return y_pred
   
   def loss(self, X_batch, y_batch, reg):
